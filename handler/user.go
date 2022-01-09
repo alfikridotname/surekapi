@@ -1,0 +1,114 @@
+package handler
+
+import (
+	"net/http"
+	"surekapi/helper"
+	"surekapi/user"
+
+	"github.com/gin-gonic/gin"
+)
+
+type userHandler struct {
+	userService user.Service
+}
+
+func NewUserHandle(userService user.Service) *userHandler {
+	return &userHandler{userService}
+}
+
+func (h *userHandler) RegisterUser(c *gin.Context) {
+	var input user.RegisterUserInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{
+			"errors": errors,
+		}
+
+		response := helper.APIResponse("Register user failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	newUser, err := h.userService.RegisterUser(input)
+	if err != nil {
+		response := helper.APIResponse("Register user failed", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	formatter := user.FormatUser(newUser, "token")
+	response := helper.APIResponse("User has been created", http.StatusOK, "success", formatter)
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *userHandler) Login(c *gin.Context) {
+	var input user.LoginInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{
+			"errors": errors,
+		}
+
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	loggedInUser, err := h.userService.Login(input)
+	if err != nil {
+		errorMessage := gin.H{
+			"errors": err.Error(),
+		}
+
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	formatter := user.FormatUser(loggedInUser, "token")
+	response := helper.APIResponse("Login success", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *userHandler) CheckUsernameAvailability(c *gin.Context) {
+	var input user.CheckUsernameInput
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{
+			"errors": errors,
+		}
+
+		response := helper.APIResponse("Username checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	isUsernameAvailable, err := h.userService.IsUsernameAvailable(input)
+	if err != nil {
+		errorMessage := gin.H{
+			"errors": "Server error",
+		}
+		response := helper.APIResponse("Username checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	data := gin.H{
+		"is_available": isUsernameAvailable,
+	}
+
+	var meteMessage string
+	meteMessage = "Username has been registered"
+	if isUsernameAvailable {
+		meteMessage = "Username available"
+	}
+
+	response := helper.APIResponse(meteMessage, http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
+}
