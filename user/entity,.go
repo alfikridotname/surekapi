@@ -12,6 +12,7 @@ type User struct {
 	Email     string    `json:"email"`
 	Username  string    `json:"username"`
 	Password  string    `json:"password"`
+	Avatar    string    `json:"avatar"`
 	IsActive  bool      `json:"is_active"`
 	IsLock    bool      `json:"is_lock"`
 	CreatedAt time.Time `json:"created_at"`

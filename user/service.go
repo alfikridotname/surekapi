@@ -31,6 +31,7 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 		return user, err
 	}
 	user.Password = string(passwordHash)
+	user.Avatar = ""
 	user.IsActive = true
 	user.IsLock = false
 	user.CreatedAt = time.Now()
