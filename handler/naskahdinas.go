@@ -23,6 +23,7 @@ func (h *naskahDinasHandler) FindNaskahDinas(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+
 	response := helper.APIResponse("List of naskah dinas", http.StatusOK, "success", naskahDinas)
 	c.JSON(http.StatusOK, response)
 }

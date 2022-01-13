@@ -44,8 +44,8 @@ func main() {
 	api.POST("/login", userHandler.Login)
 	api.POST("/username_checker", userHandler.CheckUsernameAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
-	api.GET("/kategori_penerima", kategoriPenerimaHandler.FindKategoriPenerima)
-	api.GET("/naskah_dinas", naskahDinasHandler.FindNaskahDinas)
+	api.GET("/kategori_penerima", authMiddleware(authService, userService), kategoriPenerimaHandler.FindKategoriPenerima)
+	api.GET("/naskah_dinas", authMiddleware(authService, userService), naskahDinasHandler.FindNaskahDinas)
 	router.Run()
 }
 
