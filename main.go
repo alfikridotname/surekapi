@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -9,6 +8,7 @@ import (
 	"surekapi/handler"
 	"surekapi/helper"
 	"surekapi/kategoripenerima"
+	"surekapi/naskahdinas"
 	"surekapi/user"
 
 	"github.com/dgrijalva/jwt-go"
@@ -26,16 +26,16 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	kategoriPenerimaRepository := kategoripenerima.NewRepository(db)
+	naskahDinasRepository := naskahdinas.NewRepository(db)
 
 	userService := user.NewService(userRepository)
 	kategoriPenerimaService := kategoripenerima.NewService(kategoriPenerimaRepository)
+	naskahDinasService := naskahdinas.NewService(naskahDinasRepository)
 	authService := auth.NewService()
-
-	kategoriPenerima, _ := kategoriPenerimaService.FindKategoriPenerima()
-	fmt.Println(len(kategoriPenerima))
 
 	userHandler := handler.NewUserHandle(userService, authService)
 	kategoriPenerimaHandler := handler.NewKategoriPenerimaHandler(kategoriPenerimaService)
+	naskahDinasHandler := handler.NewNaskahDinasHandler(naskahDinasService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -45,6 +45,7 @@ func main() {
 	api.POST("/username_checker", userHandler.CheckUsernameAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
 	api.GET("/kategori_penerima", kategoriPenerimaHandler.FindKategoriPenerima)
+	api.GET("/naskah_dinas", naskahDinasHandler.FindNaskahDinas)
 	router.Run()
 }
 
