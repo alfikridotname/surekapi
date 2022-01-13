@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"surekapi/auth"
 	"surekapi/helper"
 	"surekapi/user"
@@ -139,7 +140,15 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	userID := 150273
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID := currentUser.ID
+
+	oldFile := currentUser.Avatar
+	e := os.Remove(oldFile)
+	if e != nil {
+		fmt.Println(e)
+	}
+
 	path := fmt.Sprintf("images/%d-%s", userID, file.Filename)
 
 	err = c.SaveUploadedFile(file, path)
