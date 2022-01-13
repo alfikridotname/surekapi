@@ -24,6 +24,7 @@ func (h *naskahDinasHandler) FindNaskahDinas(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("List of naskah dinas", http.StatusOK, "success", naskahDinas)
+	formatter := naskahdinas.FormatMultipleNaskahDinas(naskahDinas)
+	response := helper.APIResponse("List of naskah dinas", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
