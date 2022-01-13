@@ -7,6 +7,7 @@ import (
 	"surekapi/auth"
 	"surekapi/handler"
 	"surekapi/helper"
+	"surekapi/kategoripenerima"
 	"surekapi/user"
 
 	"github.com/dgrijalva/jwt-go"
@@ -23,6 +24,8 @@ func main() {
 	}
 
 	userRepository := user.NewRepository(db)
+	kategoriPenerimaRepository := kategoripenerima.NewRepository(db)
+
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 
