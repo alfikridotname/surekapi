@@ -150,7 +150,6 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 	}
 
 	path := fmt.Sprintf("images/%d-%s", userID, file.Filename)
-
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
@@ -167,7 +166,10 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	data := gin.H{"is_uploaded": true}
+	data := gin.H{
+		"is_uploaded": true,
+	}
+
 	response := helper.APIResponse("Avatar successfuly uploaded", http.StatusOK, "success", data)
 	c.JSON(http.StatusOK, response)
 }
