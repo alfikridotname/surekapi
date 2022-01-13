@@ -35,6 +35,7 @@ func main() {
 	fmt.Println(len(kategoriPenerima))
 
 	userHandler := handler.NewUserHandle(userService, authService)
+	kategoriPenerimaHandler := handler.NewKategoriPenerimaHandler(kategoriPenerimaService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -43,6 +44,7 @@ func main() {
 	api.POST("/login", userHandler.Login)
 	api.POST("/username_checker", userHandler.CheckUsernameAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+	api.GET("/kategori_penerima", kategoriPenerimaHandler.FindKategoriPenerima)
 	router.Run()
 }
 
