@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"surekapi/auth"
 	"surekapi/handler"
 	"surekapi/user"
 
@@ -19,8 +21,11 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
+	authService := auth.NewService()
 
-	userHandler := handler.NewUserHandle(userService)
+	fmt.Println(authService.GenerateToken(1))
+
+	userHandler := handler.NewUserHandle(userService, authService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
