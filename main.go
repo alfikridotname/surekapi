@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -27,7 +28,11 @@ func main() {
 	kategoriPenerimaRepository := kategoripenerima.NewRepository(db)
 
 	userService := user.NewService(userRepository)
+	kategoriPenerimaService := kategoripenerima.NewService(kategoriPenerimaRepository)
 	authService := auth.NewService()
+
+	kategoriPenerima, _ := kategoriPenerimaService.FindKategoriPenerima()
+	fmt.Println(len(kategoriPenerima))
 
 	userHandler := handler.NewUserHandle(userService, authService)
 
