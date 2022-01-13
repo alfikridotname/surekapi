@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"surekapi/auth"
 	"surekapi/handler"
@@ -22,8 +21,6 @@ func main() {
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
-
-	fmt.Println(authService.GenerateToken(1))
 
 	userHandler := handler.NewUserHandle(userService, authService)
 
