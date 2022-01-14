@@ -16,7 +16,7 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) FindAll() ([]NaskahDinas, error) {
 	var naskahDinas []NaskahDinas
-	err := r.db.Where("is_active = ?", true).Find(&naskahDinas).Error
+	err := r.db.Where("is_active = ?", 1).Find(&naskahDinas).Error
 	if err != nil {
 		return naskahDinas, err
 	}
