@@ -3,27 +3,27 @@ package handler
 import (
 	"net/http"
 	"surekapi/helper"
-	"surekapi/kategoripenerima"
+	"surekapi/recipient_category"
 
 	"github.com/gin-gonic/gin"
 )
 
-type kategoriPenerimaHandler struct {
-	service kategoripenerima.Service
+type recipientCategoryHandler struct {
+	service recipient_category.Service
 }
 
-func NewKategoriPenerimaHandler(service kategoripenerima.Service) *kategoriPenerimaHandler {
-	return &kategoriPenerimaHandler{service}
+func NewRecipientCategoryHandler(service recipient_category.Service) *recipientCategoryHandler {
+	return &recipientCategoryHandler{service}
 }
 
-func (h *kategoriPenerimaHandler) FindKategoriPenerima(c *gin.Context) {
-	katPenerima, err := h.service.FindKategoriPenerima()
+func (h *recipientCategoryHandler) GetRecipientCategory(c *gin.Context) {
+	recipientCategory, err := h.service.GetRecipientCategory()
 	if err != nil {
-		response := helper.APIResponse("Failed to get kategori penerima", http.StatusBadRequest, "error", nil)
+		response := helper.APIResponse("Failed to get recipient category", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("List of kategori penerima", http.StatusOK, "success", katPenerima)
+	response := helper.APIResponse("List of recipient category", http.StatusOK, "success", recipientCategory)
 	c.JSON(http.StatusOK, response)
 
 }

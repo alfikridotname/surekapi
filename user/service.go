@@ -38,7 +38,6 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	user.IsLock = false
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
-	user.CreatedBy = 1
 
 	newUser, err := s.repository.Save(user)
 	if err != nil {
